@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
+import javafx.scene.layout.Border;
 
 /**
  * Write a description of class Minesweeper here.
@@ -32,7 +33,7 @@ public class Minesweeper
     ArrayList<MineTile> mines;
     
     // J variables
-    JFrame frame = new JFrame("Joa's Minesweeper"); // Creating the frame
+    JFrame frame = new JFrame(); // Creating the frame
     JLabel title = new JLabel();
     JPanel titlePanel = new JPanel();
     JPanel cellsPanel = new JPanel();
@@ -73,9 +74,19 @@ public class Minesweeper
                 cells[r][c] = cell; // Adding the newly created tile to the board array
                 
                 cell.setFocusable(false);
+                
+                //Change the style of the buttons
+                cell.setBorderPainted(true);
+                cell.setContentAreaFilled(false);
+                
+                cell.setForeground(Color.black);
+                cell.setBackground(new Color(68,147,66));
+                cell.setOpaque(true);
+
+                // Button text
                 cell.setMargin(new Insets(0, 0, 0, 0));
                 cell.setFont(new Font("Arial", Font.PLAIN, 40));
-                //cell.setText("Test");
+                cell.setText("1");
                 cellsPanel.add(cell);
             }
         }

@@ -28,5 +28,5 @@ target1.name=Minesweeper
 target1.showInterface=false
 target1.type=ClassTarget
 target1.width=120
-target1.x=203
-target1.y=171
+target1.x=200
+target1.y=160
