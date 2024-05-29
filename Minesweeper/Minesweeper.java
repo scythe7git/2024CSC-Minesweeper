@@ -3,6 +3,8 @@ import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
 import javafx.scene.layout.Border;
+import java.io.IOException;
+import java.io.File;
 
 /**
  * Write a description of class Minesweeper here.
@@ -40,11 +42,27 @@ public class Minesweeper
     
     public Minesweeper()
     {
+        createFont();
         setupBoard();
         createCells();
         placeMines();
         
         frame.setVisible(true); // Setting the frame to be visible only after everything has been drawn and created       
+    }
+    
+    void createFont() {
+        try {
+            //create the font to use. Specify the size!
+            Font comfortaaFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/comfortaa.ttf")).deriveFont(16f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            //register the font
+            ge.registerFont(comfortaaFont);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch(FontFormatException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Font created!");
     }
     
     void setupBoard() { // This function runs all the code needed to setup the frame and boards
@@ -54,7 +72,7 @@ public class Minesweeper
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Will shutdown the program when you close the window
         frame.setLayout(new BorderLayout());
         
-        title.setFont(new Font("Arial", Font.BOLD, 30));
+        title.setFont(new Font("comfortaa", Font.BOLD, 30));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setText("Joa's Minesweeper");
         title.setOpaque(true);
@@ -77,16 +95,16 @@ public class Minesweeper
                 
                 //Change the style of the buttons
                 cell.setBorderPainted(true);
-                cell.setContentAreaFilled(false);
+                cell.setContentAreaFilled(true);
                 
-                cell.setForeground(Color.black);
-                cell.setBackground(new Color(68,147,66));
+                cell.setForeground(new Color(237, 237, 237));
+                cell.setBackground(new Color(162,209,73));
                 cell.setOpaque(true);
 
                 // Button text
                 cell.setMargin(new Insets(0, 0, 0, 0));
-                cell.setFont(new Font("Arial", Font.PLAIN, 40));
-                cell.setText("1");
+                cell.setFont(new Font("comfortaa", Font.PLAIN, 40));
+                cell.setText("");
                 cellsPanel.add(cell);
             }
         }
