@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.File;
 
 /**
- * Write a description of class Minesweeper here.
+ * A version of Minesweeper coded in Java using BlueJ.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * Joa
+ * v1.8
  */
 public class Minesweeper
 {
@@ -24,9 +24,9 @@ public class Minesweeper
         }
     }
     // Number variables
-    int tileSize = 80; // The size of each tile is in pixels
-    int rows = 8;
-    int cols = 8;
+    int tileSize = 50; // The size of each tile is in pixels
+    int rows = 15;
+    int cols = 15;
     int boardWidth = cols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
     int boardHeight = rows * tileSize;
     
