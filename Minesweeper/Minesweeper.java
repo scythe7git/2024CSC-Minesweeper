@@ -24,9 +24,9 @@ public class Minesweeper
         }
     }
     // Number variables
-    int tileSize = 50; // The size of each tile is in pixels
-    int rows = 15;
-    int cols = 15;
+    int tileSize = 80; // The size of each tile is in pixels
+    int rows = 8;
+    int cols = 8;
     int boardWidth = cols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
     int boardHeight = rows * tileSize;
     
