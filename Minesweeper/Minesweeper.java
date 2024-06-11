@@ -25,13 +25,13 @@ public class Minesweeper
     }
     // Number variables
     int tileSize = 80; // The size of each tile is in pixels
-    int rows = 8;
-    int cols = 8;
-    int boardWidth = cols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
-    int boardHeight = rows * tileSize;
+    int gridRows = 8;
+    int gridCols = 8;
+    int boardWidth = gridCols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
+    int boardHeight = gridRows * tileSize;
     
     // Arrays
-    GridTile[][] cells = new GridTile[rows][cols];
+    GridTile[][] cells = new GridTile[gridRows][gridCols];
     ArrayList<GridTile> mines;
     
     // J variables
@@ -46,7 +46,7 @@ public class Minesweeper
         setupBoard();
         createCells();
         placeMines();
-        
+            
         frame.setVisible(true); // Setting the frame to be visible only after everything has been drawn and created
         
         System.out.println("Game setup");
@@ -88,10 +88,10 @@ public class Minesweeper
     }
     
     void createCells() {
-        cellsPanel.setLayout(new GridLayout(rows, cols)); // This sets the size of the grid to however many cols and rows there are
+        cellsPanel.setLayout(new GridLayout(gridRows, gridCols)); // This sets the size of the grid to however many cols and rows there are
                 
-        for (int r = 0; r < rows; r++) { // Adding tiles to the board depending on the size of the board
-            for (int c = 0; c < cols; c++) {
+        for (int r = 0; r < gridRows; r++) { // Adding tiles to the board depending on the size of the board
+            for (int c = 0; c < gridCols; c++) {
                 GridTile cell = new GridTile(r, c); // Actually creating the new tile
                 cells[r][c] = cell; // Adding the newly created tile to the board array
                 
@@ -101,7 +101,7 @@ public class Minesweeper
                 cell.setBorderPainted(true);
                 cell.setContentAreaFilled(true);
                 
-                cell.setForeground(new Color(237, 237, 237));
+                cell.setForeground(new Color(255, 255, 255));
                 cell.setBackground(new Color(162,209,73));
                 cell.setOpaque(true);
 
@@ -119,6 +119,9 @@ public class Minesweeper
                            if (cell.getText() == "") { // This will check if the cell clicked doesn't have anything displayed, and if it is a bomb
                                if (mines.contains(cell)) {
                                    displayGrid(); // If it is a bomb, the game will end, this runs the function to reveal all the mines
+                               }
+                               else {
+                                   checkMine(cell.rows, cell.cols); // For a mine, and how many mines are nearby
                                }
                            }
                        }
@@ -158,5 +161,61 @@ public class Minesweeper
         }
         
         System.out.println("The game has ended");
+    }
+    
+    void checkMine(int rows, int cols) {
+        if (rows < 0 || rows >= gridRows || cols < 0 || cols >= gridCols) { // This will cancel checking for mines if the cell is out of bounds. This only matters for chain reactions and will be ignored on the initial click
+            return;
+        }
+        
+        GridTile cell = cells[rows][cols];
+        if (!cell.isEnabled()) { // This will make sure it only chain reacts through cells that are enabled.
+            return;
+        }
+        cell.setEnabled(false); // Disabled the button so you can't click on it again
+        
+        int minesFound = 0;
+        
+        for (int r = -1; r <= 1; r++) { // Runs the countMine function for all the cells except the cell that was clicekd on.
+            for (int c = -1; c <= 1; c++) {
+                if (r == 0 && c == 0) {
+                    
+                } else {
+                    System.out.println("Checking mine at: " + r + ", " + c);
+                    minesFound += countMine(rows+r, cols+c);
+                }
+            }
+        }
+
+        if (minesFound > 0) { // If there were mines found then change the colour of the cell and set the cell text to the amount of mines nearby
+            cell.setForeground(new Color(255,255,255));
+            cell.setBackground(new Color(204, 204, 204));
+            
+            cell.setText(Integer.toString(minesFound));
+        } else { // If there were no mines found then change the colour and have no text
+            cell.setText("");
+            cell.setForeground(new Color(255,255,255));
+            cell.setBackground(new Color(204, 204, 204));
+            
+            for (int r = -1; r <= 1; r++) { // This will keep chain reacting checking mines.
+                for (int c = -1; c <= 1; c++) {
+                    if (r == 0 && c == 0) {
+                        
+                    } else {
+                        checkMine(rows+r, cols+c);
+                    }
+                }
+            }
+        }
+    }
+    
+    int countMine(int r, int c) { // This returns a 1 or 0 depending if there is a mine at that cell
+        if (r < 0 || r >= gridRows || c < 0 || c >= gridCols) { // This will return 0 if the cell is out of bounds
+            return 0;
+        }
+        if (mines.contains(cells[r][c])) { // This will return 1 if the mines array has a mine at the location of the cell
+            return 1;
+        }
+        return 0;
     }
 }
