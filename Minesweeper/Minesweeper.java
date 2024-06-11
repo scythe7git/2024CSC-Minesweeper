@@ -125,6 +125,13 @@ public class Minesweeper
                                }
                            }
                        }
+                       else if (e.getButton() == MouseEvent.BUTTON3) { // Checking for the right click button
+                           if (cell.getText() == "" && cell.isEnabled()) { // This if loop toggle changing an empty cell to a flagged cell and back
+                               cell.setText("F");
+                           } else if (cell.getText() == "F") {
+                               cell.setText("");
+                           }
+                       }
                    }
                 });
                 cellsPanel.add(cell);
