@@ -115,23 +115,23 @@ public class Minesweeper
                    public void mousePressed(MouseEvent e) { // Created an event for when a mouse button is pressed
                        GridTile cell = (GridTile) e.getSource(); // Gets the button that was pressed
                        
-                       if (e.getButton() == MouseEvent.BUTTON1) { // Button 1 is left click, button 2 is middle click, and button 3 is right click
-                           if (cell.getText() == "") { // This will check if the cell clicked doesn't have anything displayed, and if it is a bomb
-                               if (mines.contains(cell)) {
-                                   displayGrid(); // If it is a bomb, the game will end, this runs the function to reveal all the mines
-                               }
-                               else {
-                                   checkMine(cell.rows, cell.cols); // For a mine, and how many mines are nearby
-                               }
-                           }
-                       }
-                       else if (e.getButton() == MouseEvent.BUTTON3) { // Checking for the right click button
-                           if (cell.getText() == "" && cell.isEnabled()) { // This if loop toggle changing an empty cell to a flagged cell and back
-                               cell.setText("F");
-                           } else if (cell.getText() == "F") {
-                               cell.setText("");
-                           }
-                       }
+                        if (e.getButton() == MouseEvent.BUTTON1) { // Button 1 is left click, button 2 is middle click, and button 3 is right click
+                            if (cell.getText() == "") { // This will check if the cell clicked doesn't have anything displayed, and if it is a bomb
+                                if (mines.contains(cell)) {
+                                    displayGrid(); // If it is a bomb, the game will end, this runs the function to reveal all the mines
+                                }
+                                else {
+                                    checkMine(cell.rows, cell.cols); // For a mine, and how many mines are nearby
+                                }
+                            }
+                        }
+                        else if (e.getButton() == MouseEvent.BUTTON3) { // Checking for the right click button
+                            if (cell.getText() == "" && cell.isEnabled()) { // This if loop toggle changing an empty cell to a flagged cell and back
+                                cell.setText("F");
+                            } else if (cell.getText() == "F") {
+                                cell.setText("");
+                            }
+                        }
                    }
                 });
                 cellsPanel.add(cell);
