@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.layout.Border;
 import java.io.IOException;
 import java.io.File;
+import java.util.Random;
 
 /**
  * A version of Minesweeper coded in Java using BlueJ.
@@ -24,16 +25,21 @@ public class Minesweeper
         }
     }
     // Number variables
-    int tileSize = 80; // The size of each tile is in pixels
-    int gridRows = 8;
-    int gridCols = 8;
+    int tileSize = 50; // The size of each tile is in pixels
+    int gridRows = 15;
+    int gridCols = 15;
+    int boardSize = gridRows * gridCols;
     int boardWidth = gridCols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
     int boardHeight = gridRows * tileSize;
     int cellsClicked = 0;
     int flagsLeft = 0;
+    int mineCount = boardSize / 8;
     
     // Booleans
     boolean gameHasEnded = false;
+    
+    //Randoms
+    Random rand = new Random();
     
     // Arrays
     GridTile[][] cells = new GridTile[gridRows][gridCols];
@@ -160,7 +166,20 @@ public class Minesweeper
     void placeMines() {
         mines = new ArrayList<GridTile>(); // Making the mines array a new array of tiles
         
-        debugMines();
+        //debugMines();
+        int minesToPlace = mineCount;
+        while (minesToPlace > 0) {
+            int rowPlace = rand.nextInt(gridRows);
+            int colPlace = rand.nextInt(gridCols);
+            
+            GridTile cell = cells[rowPlace][colPlace];
+            
+            if (!mines.contains(cell)) {
+                mines.add(cell);
+                
+                minesToPlace--;
+            }
+        }
         
         flagsLeft = mines.size();
         
