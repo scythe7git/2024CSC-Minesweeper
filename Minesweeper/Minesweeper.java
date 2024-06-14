@@ -29,6 +29,10 @@ public class Minesweeper
     int gridCols = 8;
     int boardWidth = gridCols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
     int boardHeight = gridRows * tileSize;
+    int cellsClicked = 0;
+    
+    // Booleans
+    boolean gameHasEnded = false;
     
     // Arrays
     GridTile[][] cells = new GridTile[gridRows][gridCols];
@@ -113,6 +117,9 @@ public class Minesweeper
                 cell.addMouseListener(new MouseAdapter() { // Adding a mouse listener
                    @Override // This overrides the default event
                    public void mousePressed(MouseEvent e) { // Created an event for when a mouse button is pressed
+                       if (gameHasEnded) {
+                           return;
+                       }
                        GridTile cell = (GridTile) e.getSource(); // Gets the button that was pressed
                        
                         if (e.getButton() == MouseEvent.BUTTON1) { // Button 1 is left click, button 2 is middle click, and button 3 is right click
@@ -131,6 +138,10 @@ public class Minesweeper
                             } else if (cell.getText() == "F") {
                                 cell.setText("");
                             }
+                        }
+                        
+                        if (!gameHasEnded) {
+                            displayInfo();
                         }
                    }
                 });
@@ -168,6 +179,10 @@ public class Minesweeper
         }
         
         System.out.println("The game has ended");
+        
+        gameHasEnded = true;
+        
+        title.setText("Game Over!");
     }
     
     void checkMine(int rows, int cols) {
@@ -180,6 +195,7 @@ public class Minesweeper
             return;
         }
         cell.setEnabled(false); // Disabled the button so you can't click on it again
+        cellsClicked += 1;
         
         int minesFound = 0;
         
@@ -188,7 +204,7 @@ public class Minesweeper
                 if (r == 0 && c == 0) {
                     
                 } else {
-                    System.out.println("Checking mine at: " + r + ", " + c);
+                    //System.out.println("Checking mine at: " + r + ", " + c);
                     minesFound += countMine(rows+r, cols+c);
                 }
             }
@@ -213,7 +229,14 @@ public class Minesweeper
                     }
                 }
             }
+            
         }
+        
+        if (cellsClicked == gridRows * gridCols - mines.size()) {
+                gameHasEnded = true;
+                
+                title.setText("You found all the mines!");
+            }
     }
     
     int countMine(int r, int c) { // This returns a 1 or 0 depending if there is a mine at that cell
@@ -224,5 +247,14 @@ public class Minesweeper
             return 1;
         }
         return 0;
+    }
+    
+    void displayInfo() {
+        int numberOfCells = gridCols * gridRows - mines.size();
+        
+        title.setText("Cells cleared: " + cellsClicked + " / " + numberOfCells);
+        
+        System.out.println("Cells cleared: " + cellsClicked + " / " + numberOfCells);
+        System.out.println("# of mines: " + mines.size());
     }
 }
