@@ -30,6 +30,7 @@ public class Minesweeper
     int boardWidth = gridCols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
     int boardHeight = gridRows * tileSize;
     int cellsClicked = 0;
+    int flagsLeft = 0;
     
     // Booleans
     boolean gameHasEnded = false;
@@ -133,10 +134,12 @@ public class Minesweeper
                             }
                         }
                         else if (e.getButton() == MouseEvent.BUTTON3) { // Checking for the right click button
-                            if (cell.getText() == "" && cell.isEnabled()) { // This if loop toggle changing an empty cell to a flagged cell and back
+                            if (cell.getText() == "" && cell.isEnabled() && flagsLeft > 0) { // This if loop toggle changing an empty cell to a flagged cell and back
                                 cell.setText("F");
+                                flagsLeft--;
                             } else if (cell.getText() == "F") {
                                 cell.setText("");
+                                flagsLeft++;
                             }
                         }
                         
@@ -158,6 +161,8 @@ public class Minesweeper
         mines = new ArrayList<GridTile>(); // Making the mines array a new array of tiles
         
         debugMines();
+        
+        flagsLeft = mines.size();
         
         System.out.println("Mines added");
     }
@@ -182,6 +187,7 @@ public class Minesweeper
         
         gameHasEnded = true;
         
+        title.setFont(new Font("comfortaa", Font.BOLD, 30));
         title.setText("Game Over!");
     }
     
@@ -196,6 +202,9 @@ public class Minesweeper
         }
         cell.setEnabled(false); // Disabled the button so you can't click on it again
         cellsClicked += 1;
+        if (cell.getText() == "F") {
+            flagsLeft++;
+        }
         
         int minesFound = 0;
         
@@ -233,10 +242,11 @@ public class Minesweeper
         }
         
         if (cellsClicked == gridRows * gridCols - mines.size()) {
-                gameHasEnded = true;
-                
-                title.setText("You found all the mines!");
-            }
+            gameHasEnded = true;
+            
+            title.setFont(new Font("comfortaa", Font.BOLD, 30));
+            title.setText("You found all the mines!");
+        }
     }
     
     int countMine(int r, int c) { // This returns a 1 or 0 depending if there is a mine at that cell
@@ -252,7 +262,8 @@ public class Minesweeper
     void displayInfo() {
         int numberOfCells = gridCols * gridRows - mines.size();
         
-        title.setText("Cells cleared: " + cellsClicked + " / " + numberOfCells);
+        title.setFont(new Font("comfortaa", Font.BOLD, 20));
+        title.setText("Cells cleared: " + cellsClicked + " / " + numberOfCells + " | " + "Flags left: " + flagsLeft);
         
         System.out.println("Cells cleared: " + cellsClicked + " / " + numberOfCells);
         System.out.println("# of mines: " + mines.size());
