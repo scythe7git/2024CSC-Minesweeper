@@ -39,9 +39,6 @@ public class Minesweeper
     // Booleans
     boolean gameHasEnded = false;
     
-    // Images
-    Icon cellIcon = new ImageIcon("icons/cell.png");
-    
     // Randoms
     Random rand = new Random();
     
@@ -119,8 +116,6 @@ public class Minesweeper
                 cell.setForeground(new Color(255, 255, 255));
                 cell.setBackground(new Color(162,209,73));
                 cell.setOpaque(true);
-                
-                cell.setIcon(cellIcon);
 
                 // Button text
                 cell.setMargin(new Insets(0, 0, 0, 0));
