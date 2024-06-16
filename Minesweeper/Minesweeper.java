@@ -6,6 +6,7 @@ import javafx.scene.layout.Border;
 import java.io.IOException;
 import java.io.File;
 import java.util.Random;
+import javax.sound.sampled.*;
 
 /**
  * A version of Minesweeper coded in Java using BlueJ.
@@ -25,9 +26,9 @@ public class Minesweeper
         }
     }
     // Number variables
-    int tileSize = 50; // The size of each tile is in pixels
-    int gridRows = 15;
-    int gridCols = 15;
+    int tileSize = 80; // The size of each tile is in pixels
+    int gridRows = 10;
+    int gridCols = 10;
     int boardSize = gridRows * gridCols;
     int boardWidth = gridCols * tileSize; // Dynamically changes the size of the screen to the correct amount using the tileSize
     int boardHeight = gridRows * tileSize;
@@ -38,7 +39,10 @@ public class Minesweeper
     // Booleans
     boolean gameHasEnded = false;
     
-    //Randoms
+    // Images
+    Icon cellIcon = new ImageIcon("icons/cell.png");
+    
+    // Randoms
     Random rand = new Random();
     
     // Arrays
@@ -115,6 +119,8 @@ public class Minesweeper
                 cell.setForeground(new Color(255, 255, 255));
                 cell.setBackground(new Color(162,209,73));
                 cell.setOpaque(true);
+                
+                cell.setIcon(cellIcon);
 
                 // Button text
                 cell.setMargin(new Insets(0, 0, 0, 0));
@@ -132,9 +138,11 @@ public class Minesweeper
                         if (e.getButton() == MouseEvent.BUTTON1) { // Button 1 is left click, button 2 is middle click, and button 3 is right click
                             if (cell.getText() == "") { // This will check if the cell clicked doesn't have anything displayed, and if it is a bomb
                                 if (mines.contains(cell)) {
+                                    playSound("sounds/explosion.wav");
                                     displayGrid(); // If it is a bomb, the game will end, this runs the function to reveal all the mines
                                 }
                                 else {
+                                    playSound("sounds/click.wav");
                                     checkMine(cell.rows, cell.cols); // For a mine, and how many mines are nearby
                                 }
                             }
@@ -143,9 +151,11 @@ public class Minesweeper
                             if (cell.getText() == "" && cell.isEnabled() && flagsLeft > 0) { // This if loop toggle changing an empty cell to a flagged cell and back
                                 cell.setText("F");
                                 flagsLeft--;
+                                playSound("sounds/flag.wav");
                             } else if (cell.getText() == "F") {
                                 cell.setText("");
                                 flagsLeft++;
+                                playSound("sounds/flag.wav");
                             }
                         }
                         
@@ -265,6 +275,7 @@ public class Minesweeper
             
             title.setFont(new Font("comfortaa", Font.BOLD, 30));
             title.setText("You found all the mines!");
+            playSound("sounds/win.wav");
         }
     }
     
@@ -286,5 +297,19 @@ public class Minesweeper
         
         System.out.println("Cells cleared: " + cellsClicked + " / " + numberOfCells);
         System.out.println("# of mines: " + mines.size());
+    }
+    
+    public void playSound(String filePath) {
+        try {
+            File soundFile = new File(filePath); // Get the file
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile); // Create audio stream
+            
+            Clip clip = AudioSystem.getClip(); // Create the clip
+            clip.open(audioStream); // Add the audio to the clip
+            
+            clip.start(); // Play the clip
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) { // Check for IOExpections
+            e.printStackTrace();
+        }
     }
 }
