@@ -16,7 +16,7 @@ import javax.sound.sampled.*;
  */
 public class Minesweeper
 {
-    private class GridTile extends JButton {
+    private class GridTile extends JButton { // Creating the GridTile variables. It extends JButton which allows me to use everything within that group
         int rows;
         int cols;
         
@@ -48,7 +48,7 @@ public class Minesweeper
     GridTile[][] cells = new GridTile[gridRows][gridCols];
     ArrayList<GridTile> mines;
     
-    // GridTile
+    // GridTiles
     GridTile firstClickCell = null;
     
     // J variables
@@ -57,8 +57,10 @@ public class Minesweeper
     JPanel titlePanel = new JPanel();
     JPanel cellsPanel = new JPanel();
     
-    public Minesweeper()
+    public Minesweeper() // The main method
     {
+        gameHasEnded = false;
+        
         createFont();
         setupBoard();
         createCells();
@@ -67,13 +69,13 @@ public class Minesweeper
         
         System.out.println("Game setup");
     }
-    
+
     void createFont() {
         try {
-            //create the font to use. Specify the size!
+            // Creates a new plain font using the file path given, the font size is changeable
             Font comfortaaFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/comfortaa.ttf")).deriveFont(16f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            //register the font
+            // Registering the font to the graphics enviroment
             ge.registerFont(comfortaaFont);
         } catch (IOException e) {
             e.printStackTrace();
@@ -190,7 +192,7 @@ public class Minesweeper
             
             GridTile cell = cells[rowPlace][colPlace];
             
-            if (firstClick && !cell.equals(firstClickCell)) {
+            if (firstClick && !cell.equals(firstClickCell)) { // Checks if the click is the first click
                 mines.add(cell);
                 minesToPlace--;
             } else if (!firstClick) {
@@ -204,7 +206,7 @@ public class Minesweeper
         
         for (int i = 0; i < mines.size(); i++) { // Looping through all the mines that don't have anything displayed, and revealing them
             GridTile cell = mines.get(i);
-            System.out.println("Mine at" + cell.rows + ":" + cell.cols);
+            System.out.println("Mine at" + cell.rows + ":" + cell.cols); // Displays where all the bombs are
         }
         
         flagsLeft = mines.size();
@@ -286,7 +288,7 @@ public class Minesweeper
             
         }
         
-        if (cellsClicked == gridRows * gridCols - mines.size()) {
+        if (cellsClicked == gridRows * gridCols - mines.size()) { // Checks if all the cells have been cleared
             gameHasEnded = true;
             
             title.setFont(new Font("comfortaa", Font.BOLD, 30));
@@ -305,7 +307,7 @@ public class Minesweeper
         return 0;
     }
     
-    void displayInfo() {
+    void displayInfo() { // Displays information about the game such as the # of cleared cells and how many flags the player has left
         int numberOfCells = gridCols * gridRows - mines.size();
         
         title.setFont(new Font("comfortaa", Font.BOLD, 20));
@@ -315,7 +317,7 @@ public class Minesweeper
         System.out.println("# of mines: " + mines.size());
     }
     
-    public void playSound(String filePath) {
+    public void playSound(String filePath) { // The playSound function, this can be run from anywhere with any file path
         try {
             File soundFile = new File(filePath); // Get the file
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile); // Create audio stream
