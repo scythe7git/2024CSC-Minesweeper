@@ -249,7 +249,7 @@ public class Minesweeper
         gameHasEnded = true;
         
         title.setFont(new Font("comfortaa", Font.BOLD, 30));
-        title.setText("Game Over!");
+        title.setText("Game Over! (" + elapsedTime + "s)");
     }
     
     void checkMine(int rows, int cols) {
@@ -306,7 +306,7 @@ public class Minesweeper
             gameHasEnded = true;
             
             title.setFont(new Font("comfortaa", Font.BOLD, 30));
-            title.setText("You found all the mines!");
+            title.setText("You found all the mines! (" + elapsedTime + "s)");
             playSound("sounds/win.wav");
             timer.stop();
         }
