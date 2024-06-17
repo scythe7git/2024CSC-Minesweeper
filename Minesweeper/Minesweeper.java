@@ -36,8 +36,10 @@ public class Minesweeper
     int flagsLeft = 0;
     int mineCount = boardSize / 8;
     
+    
     // Booleans
-    boolean gameHasEnded = false;
+    boolean gameHasEnded = false;       
+    boolean firstClick = true;
     
     // Randoms
     Random rand = new Random();
@@ -45,6 +47,9 @@ public class Minesweeper
     // Arrays
     GridTile[][] cells = new GridTile[gridRows][gridCols];
     ArrayList<GridTile> mines;
+    
+    // GridTile
+    GridTile firstClickCell = null;
     
     // J variables
     JFrame frame = new JFrame(); // Creating the frame
@@ -57,7 +62,6 @@ public class Minesweeper
         createFont();
         setupBoard();
         createCells();
-        placeMines();
             
         frame.setVisible(true); // Setting the frame to be visible only after everything has been drawn and created
         
@@ -131,6 +135,12 @@ public class Minesweeper
                        GridTile cell = (GridTile) e.getSource(); // Gets the button that was pressed
                        
                         if (e.getButton() == MouseEvent.BUTTON1) { // Button 1 is left click, button 2 is middle click, and button 3 is right click
+                            System.out.println("Left button clicked");
+                            if (firstClickCell == null) {
+                                firstClickCell = cell;
+                                placeMines();
+                            }
+                            
                             if (cell.getText() == "") { // This will check if the cell clicked doesn't have anything displayed, and if it is a bomb
                                 if (mines.contains(cell)) {
                                     playSound("sounds/explosion.wav");
@@ -143,6 +153,7 @@ public class Minesweeper
                             }
                         }
                         else if (e.getButton() == MouseEvent.BUTTON3) { // Checking for the right click button
+                            System.out.println("Right button clicked");
                             if (cell.getText() == "" && cell.isEnabled() && flagsLeft > 0) { // This if loop toggle changing an empty cell to a flagged cell and back
                                 cell.setText("F");
                                 flagsLeft--;
@@ -179,11 +190,21 @@ public class Minesweeper
             
             GridTile cell = cells[rowPlace][colPlace];
             
-            if (!mines.contains(cell)) {
+            if (firstClick && !cell.equals(firstClickCell)) {
                 mines.add(cell);
-                
                 minesToPlace--;
+            } else if (!firstClick) {
+                if (!mines.contains(cell)) {
+                    mines.add(cell);
+                    
+                    minesToPlace--;
+                }
             }
+        }
+        
+        for (int i = 0; i < mines.size(); i++) { // Looping through all the mines that don't have anything displayed, and revealing them
+            GridTile cell = mines.get(i);
+            System.out.println("Mine at" + cell.rows + ":" + cell.cols);
         }
         
         flagsLeft = mines.size();
