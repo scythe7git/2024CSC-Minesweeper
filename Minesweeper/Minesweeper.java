@@ -35,7 +35,10 @@ public class Minesweeper
     int cellsClicked = 0;
     int flagsLeft = 0;
     int mineCount = boardSize / 8;
+    int elapsedTime = 0;
     
+    // Timer
+    Timer timer;
     
     // Booleans
     boolean gameHasEnded = false;       
@@ -64,6 +67,15 @@ public class Minesweeper
         createFont();
         setupBoard();
         createCells();
+        
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                elapsedTime++;
+                displayInfo();
+                System.out.println("Elapsed time: " + elapsedTime);
+            }
+        });
             
         frame.setVisible(true); // Setting the frame to be visible only after everything has been drawn and created
         
@@ -138,6 +150,7 @@ public class Minesweeper
                        
                         if (e.getButton() == MouseEvent.BUTTON1) { // Button 1 is left click, button 2 is middle click, and button 3 is right click
                             System.out.println("Left button clicked");
+                            timer.start();
                             if (firstClickCell == null) {
                                 firstClickCell = cell;
                                 placeMines();
@@ -147,6 +160,7 @@ public class Minesweeper
                                 if (mines.contains(cell)) {
                                     playSound("sounds/explosion.wav");
                                     displayGrid(); // If it is a bomb, the game will end, this runs the function to reveal all the mines
+                                    timer.stop();
                                 }
                                 else {
                                     playSound("sounds/click.wav");
@@ -294,6 +308,7 @@ public class Minesweeper
             title.setFont(new Font("comfortaa", Font.BOLD, 30));
             title.setText("You found all the mines!");
             playSound("sounds/win.wav");
+            timer.stop();
         }
     }
     
@@ -311,10 +326,10 @@ public class Minesweeper
         int numberOfCells = gridCols * gridRows - mines.size();
         
         title.setFont(new Font("comfortaa", Font.BOLD, 20));
-        title.setText("Cells cleared: " + cellsClicked + " / " + numberOfCells + " | " + "Flags left: " + flagsLeft);
+        title.setText("Cells cleared: " + cellsClicked + " / " + numberOfCells + " | " + "Flags left: " + flagsLeft + " | " + "Elapsed Time: " + elapsedTime);
         
-        System.out.println("Cells cleared: " + cellsClicked + " / " + numberOfCells);
-        System.out.println("# of mines: " + mines.size());
+        //System.out.println("Cells cleared: " + cellsClicked + " / " + numberOfCells);
+        //System.out.println("# of mines: " + mines.size());
     }
     
     public void playSound(String filePath) { // The playSound function, this can be run from anywhere with any file path
