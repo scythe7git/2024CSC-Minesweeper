@@ -36,6 +36,7 @@ public class Minesweeper
     int flagsLeft = 0;
     int mineCount = boardSize / 8;
     int elapsedTime = 0;
+    int fontSize = 16;
     
     // Timer
     Timer timer;
@@ -43,13 +44,15 @@ public class Minesweeper
     // Booleans
     boolean gameHasEnded = false;       
     boolean firstClick = true;
+    boolean menuShowed = true;
     
     // Randoms
     Random rand = new Random();
     
     // Arrays
-    GridTile[][] cells = new GridTile[gridRows][gridCols];
+    GridTile[][] cells;
     ArrayList<GridTile> mines;
+    String[] difficulties = new String[] {"Easy", "Medium", "Hard"};
     
     // GridTiles
     GridTile firstClickCell = null;
@@ -59,6 +62,10 @@ public class Minesweeper
     JLabel title = new JLabel();
     JPanel titlePanel = new JPanel();
     JPanel cellsPanel = new JPanel();
+    JComboBox<String> difficultiesDropdown = new JComboBox<>(difficulties);
+    
+    // Strings
+    String selectedDifficulties = (String) difficultiesDropdown.getSelectedItem();
     
     public Minesweeper() // The main method
     {
@@ -66,9 +73,9 @@ public class Minesweeper
         
         createFont();
         setupBoard();
-        createCells();
+        difficultyPanel();
         
-        timer = new Timer(1000, new ActionListener() {
+        timer = new Timer(1000, new ActionListener() { // Creating a timer that ticks every second and runs displays the info
             @Override
             public void actionPerformed(ActionEvent e) {
                 elapsedTime++;
@@ -80,6 +87,75 @@ public class Minesweeper
         frame.setVisible(true); // Setting the frame to be visible only after everything has been drawn and created
         
         System.out.println("Game setup");
+    }
+    
+    void beginGame(){ // The function that starts the game
+        frame.setVisible(false);
+        frame.setSize(boardWidth, boardHeight);
+        frame.setLocationRelativeTo(null);
+        titlePanel.remove(difficultiesDropdown); // Disabling the ability to change the difficulty after the game has started
+        createCells();
+        frame.setVisible(true);
+    }
+    
+    void difficultyPanel() { // The code for the difficulty panel
+        difficultiesDropdown.setEditable(false);
+        difficultiesDropdown.setForeground(new Color(255,255,255));
+        difficultiesDropdown.setBackground(new Color(162,209,73));
+        difficultiesDropdown.setFont(new Font("comfortaa", Font.BOLD, 15));
+        difficultiesDropdown.addActionListener(new ActionListener() {
+         
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                JComboBox<String> comboBox = (JComboBox<String>) event.getSource();
+                String selected = (String) comboBox.getSelectedItem();
+         
+                if (selected.equals("Easy")) { // Checking what difficulty it is and changing the size of the map depending on it
+                    tileSize = 80;
+                    gridRows = 10;
+                    gridCols = 10;
+                    boardSize = gridRows * gridCols;
+                    boardWidth = gridCols * tileSize;
+                    boardHeight = gridRows * tileSize;
+                    cellsClicked = 0;
+                    flagsLeft = 0;
+                    mineCount = boardSize / 8;
+                    cells = new GridTile[gridRows][gridCols];
+                    fontSize = 40;
+                    System.out.println("Set to easy!");
+                } else if (selected.equals("Medium")) {
+                    tileSize = 60;
+                    gridRows = 15;
+                    gridCols = 15;
+                    boardSize = gridRows * gridCols;
+                    boardWidth = gridCols * tileSize;
+                    boardHeight = gridRows * tileSize;
+                    cellsClicked = 0;
+                    flagsLeft = 0;
+                    mineCount = boardSize / 8;
+                    cells = new GridTile[gridRows][gridCols];
+                    fontSize = 30;
+                    System.out.println("Set to medium!");
+                } else {
+                    tileSize = 50;
+                    gridRows = 20;
+                    gridCols = 20;
+                    boardSize = gridRows * gridCols;
+                    boardWidth = gridCols * tileSize;
+                    boardHeight = gridRows * tileSize;
+                    cellsClicked = 0;
+                    flagsLeft = 0;
+                    mineCount = boardSize / 8;
+                    cells = new GridTile[gridRows][gridCols];
+                    fontSize = 20;
+                    System.out.println("Set to hard!"); 
+                }
+                
+                beginGame();
+            }
+        });
+        
+        titlePanel.add(difficultiesDropdown, BorderLayout.EAST);
     }
 
     void createFont() {
@@ -98,7 +174,7 @@ public class Minesweeper
     }
     
     void setupBoard() { // This function runs all the code needed to setup the frame and boards
-        frame.setSize(boardWidth, boardHeight);
+        frame.setSize(500, 80);
         frame.setLocationRelativeTo(null); // Resets location to the center of the screen
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Will shutdown the program when you close the window
@@ -106,7 +182,7 @@ public class Minesweeper
         
         title.setFont(new Font("comfortaa", Font.BOLD, 30));
         title.setHorizontalAlignment(JLabel.CENTER);
-        title.setText("Joa's Minesweeper");
+        title.setText("Pick your difficulty:");
         title.setOpaque(true);
         
         titlePanel.setLayout(new BorderLayout());
@@ -137,7 +213,7 @@ public class Minesweeper
 
                 // Button text
                 cell.setMargin(new Insets(0, 0, 0, 0));
-                cell.setFont(new Font("comfortaa", Font.PLAIN, 40));
+                cell.setFont(new Font("comfortaa", Font.PLAIN, fontSize));
                 cell.setText("");
                 
                 cell.addMouseListener(new MouseAdapter() { // Adding a mouse listener
@@ -146,6 +222,7 @@ public class Minesweeper
                        if (gameHasEnded) {
                            return;
                        }
+                       titlePanel.remove(difficultiesDropdown);
                        GridTile cell = (GridTile) e.getSource(); // Gets the button that was pressed
                        
                         if (e.getButton() == MouseEvent.BUTTON1) { // Button 1 is left click, button 2 is middle click, and button 3 is right click
