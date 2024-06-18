@@ -53,6 +53,7 @@ public class Minesweeper
     GridTile[][] cells;
     ArrayList<GridTile> mines;
     String[] difficulties = new String[] {"Easy", "Medium", "Hard"};
+    ArrayList<GridTile> forbiddenCells;
     
     // GridTiles
     GridTile firstClickCell = null;
@@ -63,6 +64,7 @@ public class Minesweeper
     JPanel titlePanel = new JPanel();
     JPanel cellsPanel = new JPanel();
     JComboBox<String> difficultiesDropdown = new JComboBox<>(difficulties);
+    JButton restartButton = new JButton("Restart");
     
     // Strings
     String selectedDifficulties = (String) difficultiesDropdown.getSelectedItem();
@@ -87,6 +89,32 @@ public class Minesweeper
         frame.setVisible(true); // Setting the frame to be visible only after everything has been drawn and created
         
         System.out.println("Game setup");
+    }
+    
+    void restartButton() {
+        restartButton.setFocusable(false);
+        
+        restartButton.setBorderPainted(true);
+        restartButton.setContentAreaFilled(true);
+        
+        restartButton.setForeground(new Color(255, 255, 255));
+        restartButton.setBackground(new Color(162,209,73));
+        restartButton.setOpaque(true);
+
+        restartButton.setFont(new Font("comfortaa", Font.PLAIN, fontSize));
+        
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reset();
+            }
+        });
+        titlePanel.add(restartButton, BorderLayout.EAST);
+    }
+    
+    void reset() {
+        frame.dispose();
+        new Minesweeper();
     }
     
     void beginGame(){ // The function that starts the game
@@ -274,26 +302,37 @@ public class Minesweeper
         System.out.println("Grid created");
     }
     
+    private ArrayList<GridTile> getNeighbors(int row, int col) { // Same logic as the checkMine function but only runs once and returns all the neighbors
+        ArrayList<GridTile> neighbors = new ArrayList<>();
+        for (int r = row-1; r <= row+1; r++) {
+            for (int c = col-1; c <= col+1; c++) {
+                if (r >= 0 && r < gridRows && c >= 0 && c < gridCols) {
+                    if (!(r == row && c == col)) {
+                        neighbors.add(cells[r][c]);
+                    }
+                }
+            }
+        }
+        return neighbors;
+    }
+    
     void placeMines() {
         mines = new ArrayList<GridTile>(); // Making the mines array a new array of tiles
         
         //debugMines();
         int minesToPlace = mineCount;
+        forbiddenCells = getNeighbors(firstClickCell.rows, firstClickCell.cols); // Make the neighbors forbidden
+        forbiddenCells.add(firstClickCell); // Make sure the first clicked cell is also forbidden
+        
         while (minesToPlace > 0) {
             int rowPlace = rand.nextInt(gridRows);
             int colPlace = rand.nextInt(gridCols);
             
             GridTile cell = cells[rowPlace][colPlace];
             
-            if (firstClick && !cell.equals(firstClickCell)) { // Checks if the click is the first click
+            if (!forbiddenCells.contains(cell) &&!mines.contains(cell)) { // Only places a mine if there isn't already a mine and it isn't a forbidden cell
                 mines.add(cell);
                 minesToPlace--;
-            } else if (!firstClick) {
-                if (!mines.contains(cell)) {
-                    mines.add(cell);
-                    
-                    minesToPlace--;
-                }
             }
         }
         
@@ -329,6 +368,8 @@ public class Minesweeper
         
         title.setFont(new Font("comfortaa", Font.BOLD, 30));
         title.setText("Game Over! (" + elapsedTime + "s)");
+        
+        restartButton();
     }
     
     void checkMine(int rows, int cols) {
@@ -388,6 +429,7 @@ public class Minesweeper
             title.setText("You found all the mines! (" + elapsedTime + "s)");
             playSound("sounds/win.wav");
             timer.stop();
+            restartButton();
         }
     }
     
