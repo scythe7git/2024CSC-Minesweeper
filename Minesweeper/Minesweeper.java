@@ -163,7 +163,9 @@ public class Minesweeper
                                     timer.stop();
                                 }
                                 else {
-                                    playSound("sounds/click.wav");
+                                    if (cell.isEnabled()) {
+                                        playSound("sounds/click.wav");
+                                    }
                                     checkMine(cell.rows, cell.cols); // For a mine, and how many mines are nearby
                                 }
                             }
