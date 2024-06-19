@@ -122,6 +122,7 @@ public class Minesweeper
         frame.setSize(boardWidth, boardHeight);
         frame.setLocationRelativeTo(null);
         titlePanel.remove(difficultiesDropdown); // Disabling the ability to change the difficulty after the game has started
+        title.setText("Select a cell to start:");
         createCells();
         frame.setVisible(true);
     }
