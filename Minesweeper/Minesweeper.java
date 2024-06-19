@@ -160,7 +160,7 @@ public class Minesweeper
                     boardHeight = gridRows * tileSize;
                     cellsClicked = 0;
                     flagsLeft = 0;
-                    mineCount = boardSize / 8;
+                    mineCount = boardSize / 6;
                     cells = new GridTile[gridRows][gridCols];
                     fontSize = 30;
                     System.out.println("Set to medium!");
@@ -173,7 +173,7 @@ public class Minesweeper
                     boardHeight = gridRows * tileSize;
                     cellsClicked = 0;
                     flagsLeft = 0;
-                    mineCount = boardSize / 8;
+                    mineCount = boardSize / 4;
                     cells = new GridTile[gridRows][gridCols];
                     fontSize = 20;
                     System.out.println("Set to hard!"); 
