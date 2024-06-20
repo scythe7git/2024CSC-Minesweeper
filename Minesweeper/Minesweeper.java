@@ -45,6 +45,7 @@ public class Minesweeper
     boolean gameHasEnded = false;       
     boolean firstClick = true;
     boolean menuShowed = true;
+    boolean minesPlaced = false;
     
     // Randoms
     Random rand = new Random();
@@ -121,6 +122,7 @@ public class Minesweeper
         frame.setVisible(false);
         frame.setSize(boardWidth, boardHeight);
         frame.setLocationRelativeTo(null);
+        minesPlaced = false;
         titlePanel.remove(difficultiesDropdown); // Disabling the ability to change the difficulty after the game has started
         title.setText("Select a cell to start:");
         createCells();
@@ -289,7 +291,7 @@ public class Minesweeper
                             }
                         }
                         
-                        if (!gameHasEnded) {
+                        if (!gameHasEnded && minesPlaced) {
                             displayInfo();
                         }
                    }
@@ -343,6 +345,8 @@ public class Minesweeper
         }
         
         flagsLeft = mines.size();
+        
+        minesPlaced = true;
         
         System.out.println("Mines added");
     }
