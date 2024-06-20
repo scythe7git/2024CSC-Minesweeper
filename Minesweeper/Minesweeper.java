@@ -185,7 +185,13 @@ public class Minesweeper
                     tileSize = 80;
                     gridRows = 10;
                     gridCols = 10;
+                    boardSize = gridRows * gridCols;
+                    boardWidth = gridCols * tileSize;
+                    boardHeight = gridRows * tileSize;
+                    cellsClicked = 0;
+                    flagsLeft = 0;
                     mineCount = boardSize / 8;
+                    cells = new GridTile[gridRows][gridCols];
                     fontSize = 40;
                     System.out.println("Set to easy!");
                 } else if (selected.equals("Medium")) {
@@ -193,7 +199,13 @@ public class Minesweeper
                     tileSize = 60;
                     gridRows = 15;
                     gridCols = 15;
+                    boardSize = gridRows * gridCols;
+                    boardWidth = gridCols * tileSize;
+                    boardHeight = gridRows * tileSize;
+                    cellsClicked = 0;
+                    flagsLeft = 0;
                     mineCount = boardSize / 6;
+                    cells = new GridTile[gridRows][gridCols];
                     fontSize = 30;
                     System.out.println("Set to medium!");
                 } else {
@@ -201,17 +213,16 @@ public class Minesweeper
                     tileSize = 50;
                     gridRows = 20;
                     gridCols = 20;
+                    boardSize = gridRows * gridCols;
+                    boardWidth = gridCols * tileSize;
+                    boardHeight = gridRows * tileSize;
+                    cellsClicked = 0;
+                    flagsLeft = 0;
                     mineCount = boardSize / 4;
+                    cells = new GridTile[gridRows][gridCols];
                     fontSize = 20;
                     System.out.println("Set to hard!"); 
                 }
-                
-                boardSize = gridRows * gridCols;
-                boardWidth = gridCols * tileSize;
-                boardHeight = gridRows * tileSize;
-                cellsClicked = 0;
-                flagsLeft = 0;
-                cells = new GridTile[gridRows][gridCols];
                 
                 beginGame(); // Initialising the game
             }
